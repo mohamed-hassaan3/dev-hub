@@ -6,11 +6,13 @@ const IMG_TYPE = ["image/jpeg", "image/png"];
 export const formSchema = z.object({
   name: z
     .string({ message: "Name is required" })
-    .min(2, { message: "name must be more than 2 charchters" }),
+    .min(3, { message: "name must be more than 3 charchters" }),
   url: z.string({ message: "URL is required" }).url(),
   email: z.string({ message: "Email is required" }).email(),
-  category: z.string({ message: "category is required" }),
-  private: z.boolean(),
+  category: z.string().min(1, "category is required"),
+  private: z.literal(true, {
+    errorMap: () => ({ message: "You must agree to continue" }),
+  }),
   description: z
     .string()
     .min(10, { message: "Description should be at least 10 characters long" })
@@ -25,7 +27,8 @@ export const formSchema = z.object({
     .refine((file) => IMG_TYPE.includes(file.type), {
       message: `type of image Must to be ${IMG_TYPE.join(", ")}`,
     })
-    .optional(),
+    .optional()
+    .nullable(),
 });
 
 export type FormSchema = z.infer<typeof formSchema>;
