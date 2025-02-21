@@ -4,7 +4,9 @@ import Button from "./ui/Button";
 import AvatarImg from "./AvatarImg";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { FormSchema, formSchema } from "@/utils/validations";
+import { FormSchema, formSchema } from "@/utils/formValidations";
+import { addDoc, collection } from "firebase/firestore";
+import { db } from "@/firebase/firebasestore";
 
 const DevInput = () => {
   const form = useForm<FormSchema>({
@@ -19,9 +21,16 @@ const DevInput = () => {
   } = form;
 
   const onSubmit: SubmitHandler<FormSchema> = async (data) => {
-    await new Promise((resolve) => setTimeout(resolve, 3000));
-    console.log(data);
-    return reset();
+    console.log("DATA before", data);
+
+    try {
+      const docref = await addDoc(collection(db, "devForm"), data);
+      alert("Resource submitted successfully!");
+      console.log("DATA", docref.id);
+      return reset();
+    } catch (e: unknown) {
+      console.error((e as Error)?.message);
+    }
   };
   return (
     <div className="my-4 relative w-[400px] py-2 px-5 text-sm text-white flex flex-col gap-5 rounded-2xl border-2 border-transparent bg-[#212121] before:absolute before:inset-0 before:m-[-2px] before:rounded-[16px] before:bg-gradient-to-tr before:from-transparent before:via-[#e81cff] before:to-[#40c9ff] before:z-[-1]">
@@ -113,14 +122,18 @@ const DevInput = () => {
           </label>
           <textarea
             className="w-full p-3 rounded-lg text-white bg-transparent border border-[#414141] min-h-[96px] h-[96px] resize-none focus:outline-none focus:border-[#e81cff]"
-            name="textarea"
             id="textarea"
             cols={50}
+            {...register("description")}
           ></textarea>
         </div>
         <div className="flex items-center space-x-3">
           <label className="group flex items-center cursor-pointer">
-            <input className="hidden peer" type="checkbox" {...register("private")} />
+            <input
+              className="hidden peer"
+              type="checkbox"
+              {...register("private")}
+            />
             <span className="relative w-4 h-4 flex justify-center items-center bg-gray-100 border-2 border-gray-400 rounded-md shadow-md transition-all duration-100 peer-checked:border-blue-500 peer-checked:bg-blue-500 peer-hover:scale-105">
               <span className="absolute inset-0 bg-gradient-to-br from-white/30 to-white/10 opacity-0 peer-checked:opacity-100 rounded-md transition-all duration-100 peer-checked:animate-pulse"></span>
               <svg
@@ -145,12 +158,17 @@ const DevInput = () => {
           )}
         </div>
         <Button
-          className="flex items-start justify-center self-start font-semibold text-[#717171] w-2/5 bg-[#313131] border border-[#414141] p-3 text-sm gap-2 mt-2 cursor-pointer rounded-md hover:bg-white hover:border-white active:scale-95"
-          color="transparent"
+          className={`flex items-start justify-center self-start font-semibold w-2/5 border border-[#414141] p-3 text-sm gap-2 mt-2 ${
+            !isSubmitting
+              ? "cursor-pointer rounded-md hover:bg-[#e81cff] hover:border-white active:scale-95"
+              : "cursor-not-allowed"
+          }`}
+          color=""
           size="medium"
           type="submit"
+          disabled={isSubmitting}
         >
-          {isSubmitting ? "loading..." : "Submit"}
+          {isSubmitting ? "Submiting..." : "Submit"}
         </Button>
       </form>
     </div>

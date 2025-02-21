@@ -1,5 +1,5 @@
 "use client";
-import { formSchema } from "@/utils/validations";
+import { formSchema } from "@/utils/formValidations";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import React, { useRef, useState } from "react";
@@ -82,6 +82,7 @@ const AvatarImg = () => {
             alt="profilePicture"
             height={50}
             width={50}
+            {...register("avatar")}
           />
           <label
             htmlFor="file"
