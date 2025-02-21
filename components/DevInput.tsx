@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { FormSchema, formSchema } from "@/utils/formValidations";
 import { addDoc, collection } from "firebase/firestore";
 import { db } from "@/firebase/firebasestore";
+import { useRouter } from "next/navigation";
 
 const DevInput = () => {
   const form = useForm<FormSchema>({
@@ -19,17 +20,15 @@ const DevInput = () => {
     handleSubmit,
     reset,
   } = form;
+  const router = useRouter();
 
   const onSubmit: SubmitHandler<FormSchema> = async (data) => {
-    console.log("DATA before", data);
-
     try {
-      const docref = await addDoc(collection(db, "devForm"), data);
-      alert("Resource submitted successfully!");
-      console.log("DATA", docref.id);
+      await addDoc(collection(db, "devForm"), data);
+      router.push(`/developer-list`);
       return reset();
-    } catch (e: unknown) {
-      console.error((e as Error)?.message);
+    } catch (error: unknown) {
+      console.error((error as Error)?.message);
     }
   };
   return (
