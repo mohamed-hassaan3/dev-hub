@@ -4,6 +4,7 @@ const IMG_SIZE = 3 * 1024 * 1024;
 const IMG_TYPE = ["image/jpeg", "image/png"];
 
 export const formSchema = z.object({
+  id: z.string().optional(),
   name: z
     .string({ message: "Name is required" })
     .min(3, { message: "name must be more than 3 charchters" }),
@@ -16,19 +17,20 @@ export const formSchema = z.object({
   description: z
     .string()
     .min(10, { message: "Description should be at least 10 characters long" })
-    .max(255, { message: "max 255 words" })
+    .max(1000, { message: "max 255 words" })
     .optional()
     .or(z.literal("")),
-  avatar: z
-    .instanceof(File)
-    .refine((file) => file.size >= IMG_SIZE, {
-      message: `file must be less than ${IMG_SIZE}MB`,
-    })
-    .refine((file) => IMG_TYPE.includes(file.type), {
-      message: `type of image Must to be ${IMG_TYPE.join(", ")}`,
-    })
-    .optional()
-    .nullable(),
+  avatar: z.union([
+    z
+      .instanceof(File)
+      .refine((file) => file.size <= IMG_SIZE, {
+        message: `File must be less than ${IMG_SIZE}MB`,
+      })
+      .refine((file) => IMG_TYPE.includes(file.type), {
+        message: `Type of image must be ${IMG_TYPE.join(", ")}`,
+      }),
+    z.string().url().optional().nullable(),
+  ]),
 });
 
 export type FormSchema = z.infer<typeof formSchema>;

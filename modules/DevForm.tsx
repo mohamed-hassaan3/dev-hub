@@ -1,9 +1,9 @@
-import DevInput from "@/components/DevInput";
+import DevInput from "@/components/home-page/DevInput";
 import React from "react";
 
 const DevForm = () => {
   return (
-    <div className="">
+    <div>
       <DevInput />
     </div>
   );

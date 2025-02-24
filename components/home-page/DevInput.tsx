@@ -1,13 +1,14 @@
 "use client";
 import React from "react";
-import Button from "./ui/Button";
-import AvatarImg from "./AvatarImg";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormSchema, formSchema } from "@/utils/formValidations";
 import { addDoc, collection } from "firebase/firestore";
 import { db } from "@/firebase/firebasestore";
 import { useRouter } from "next/navigation";
+import AvatarImg from "./AvatarImg";
+import CheckboxBtn from "../ui/CheckboxBtn";
+import Button from "../ui/Button";
 
 const DevInput = () => {
   const form = useForm<FormSchema>({
@@ -32,7 +33,7 @@ const DevInput = () => {
     }
   };
   return (
-    <div className="my-4 relative w-[400px] py-2 px-5 text-sm text-white flex flex-col gap-5 rounded-2xl border-2 border-transparent bg-[#212121] before:absolute before:inset-0 before:m-[-2px] before:rounded-[16px] before:bg-gradient-to-tr before:from-transparent before:via-[#e81cff] before:to-[#40c9ff] before:z-[-1]">
+    <div className="my-4 relative md:w-[600px] p-4 text-sm text-white flex flex-col gap-5 rounded-2xl border-2 border-transparent bg-[#212121] before:absolute before:inset-0 before:m-[-2px] before:rounded-[16px] before:bg-gradient-to-tr before:from-transparent before:via-[#e81cff] before:to-[#40c9ff] before:z-[-1]">
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
         {/* AVATAR IMG Component */}
         <AvatarImg />
@@ -46,31 +47,30 @@ const DevInput = () => {
           <input
             className="w-full p-3 rounded-lg text-white bg-transparent border border-[#414141] placeholder-opacity-50 focus:outline-none focus:border-[#e81cff]"
             type="text"
-            id="name"
             {...register("name")}
           />
           {errors && (
             <small className="text-[#e81cff]">{errors.name?.message}</small>
           )}
         </div>
-        <div className="flex flex-col gap-0.5">
+        <div className="md:flex-row flex flex-col items-center justify-center gap-4 w-full">
+          <div className="md:w-1/2 w-full">
           <label
             className="block mb-1 text-[#717171] font-semibold text-xs"
             htmlFor="email"
-          >
+            >
             Developer Email
           </label>
           <input
             className="w-full p-3 rounded-lg text-white bg-transparent border border-[#414141] placeholder-opacity-50 focus:outline-none focus:border-[#e81cff]"
             type="text"
-            id="email"
             {...register("email")}
-          />
+            />
           {errors && (
             <small className="text-[#e81cff]">{errors.email?.message}</small>
           )}
-        </div>
-        <div className="flex flex-col gap-0.5">
+          </div>
+          <div className="md:w-1/2 w-full">
           <label
             className="block mb-1 text-[#717171] font-semibold text-xs"
             htmlFor="url"
@@ -80,13 +80,14 @@ const DevInput = () => {
           <input
             className="w-full p-3 rounded-lg text-white bg-transparent border border-[#414141] placeholder-opacity-50 focus:outline-none focus:border-[#e81cff]"
             type="text"
-            id="url"
             {...register("url")}
           />
           {errors && (
             <small className="text-[#e81cff]">{errors.url?.message}</small>
           )}
         </div>
+        </div>
+        
         <div className="flex flex-col gap-0.5">
           <label
             className=" cursor-pointer block mb-1 text-[#717171] font-semibold text-xs"
@@ -121,7 +122,6 @@ const DevInput = () => {
           </label>
           <textarea
             className="w-full p-3 rounded-lg text-white bg-transparent border border-[#414141] min-h-[96px] h-[96px] resize-none focus:outline-none focus:border-[#e81cff]"
-            id="textarea"
             cols={50}
             {...register("description")}
           ></textarea>
@@ -133,24 +133,7 @@ const DevInput = () => {
               type="checkbox"
               {...register("private")}
             />
-            <span className="relative w-4 h-4 flex justify-center items-center bg-gray-100 border-2 border-gray-400 rounded-md shadow-md transition-all duration-100 peer-checked:border-blue-500 peer-checked:bg-blue-500 peer-hover:scale-105">
-              <span className="absolute inset-0 bg-gradient-to-br from-white/30 to-white/10 opacity-0 peer-checked:opacity-100 rounded-md transition-all duration-100 peer-checked:animate-pulse"></span>
-              <svg
-                fill="currentColor"
-                viewBox="0 0 20 20"
-                className="hidden w-5 h-5 text-white peer-checked:block transition-transform duration-500 transform scale-50 peer-checked:scale-100"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  clipRule="evenodd"
-                  d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586 4.707 9.293a1 1 0 10-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z"
-                  fillRule="evenodd"
-                ></path>
-              </svg>
-            </span>
-            <span className="ml-3 text-[#717171] group-hover:text-blue-500 font-medium transition-colors duration-300">
-              private and conditions
-            </span>
+            <CheckboxBtn />
           </label>
           {errors && (
             <small className="text-[#e81cff]">{errors.private?.message}</small>
