@@ -3,6 +3,7 @@ import Button from "../ui/Button";
 import { deleteDoc, doc } from "@firebase/firestore";
 import { db } from "@/firebase/firebasestore";
 import { FormSchema } from "@/utils/formValidations";
+import { toast } from 'react-toastify';
 
 const DeletePost = ({ id, setDeveloperList }: { id: string, setDeveloperList: React.Dispatch<React.SetStateAction<FormSchema[]>> }) => {
   
@@ -11,7 +12,7 @@ const DeletePost = ({ id, setDeveloperList }: { id: string, setDeveloperList: Re
     try {
       await deleteDoc(idRef);
       setDeveloperList((prev) => prev.filter((item: FormSchema) => item.id !== id))
-      alert(`Deleted ${id}`);
+      toast("Deleted!!")
 
     } catch (error) {
       console.log(error);
@@ -22,7 +23,7 @@ const DeletePost = ({ id, setDeveloperList }: { id: string, setDeveloperList: Re
       onClick={handleDelete}
       size="small"
       color="danger"
-      className="danger"
+      className="danger w-24 !rounded-xl"
     >
       <span>Delete</span>
     </Button>

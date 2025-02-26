@@ -3,16 +3,18 @@ import DevList from "@/modules/DevList";
 import React from "react";
 import Button from "@/components/ui/Button";
 import { useRouter } from "next/navigation";
+import { ToastContainer } from "react-toastify";
 
 const DeveloperList = () => {
   const router = useRouter();
 
   return (
-    <div className="p-4">
+    <div className="p-5 w-[100%] lg:w-[60%] md:w-[80%] m-auto">
+      <ToastContainer autoClose={800} />
       <Button color="transparent" size="medium" onClick={() => router.back()}>
         Back to Form
       </Button>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 m-8 justify-center items-start gap-8">
+      <div className="">
       <DevList />
       </div>
     </div>
